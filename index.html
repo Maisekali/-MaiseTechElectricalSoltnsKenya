@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Works Quotation Generator - Kenya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a56db;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1e40af);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section, .output-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--secondary);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        .project-type-selector {
+            margin-bottom: 2rem;
+        }
+
+        .project-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .project-option {
+            background-color: var(--light);
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .project-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .project-option.selected {
+            border-color: var(--primary);
+            background-color: #e0f2fe;
+            box-shadow: 0 5px 10px rgba(26, 86, 219, 0.15);
+        }
+
+        .project-option i {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+        }
+
+        .additional-options {
+            background-color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .checkbox-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .generate-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+
+        .generate-btn:hover {
+            background-color: #1e40af;
+        }
+
+        .generate-btn i {
+            margin-right: 8px;
+        }
+
+        .output-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quotation-preview {
+            flex-grow: 1;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .quotation-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .quotation-header h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .quotation-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .quotation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .quotation-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .quotation-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .quotation-table tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+
+        .quotation-total {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px dashed var(--gray);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .download-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .download-btn:hover {
+            background-color: #0da271;
+        }
+
+        .print-btn {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .print-btn:hover {
+            background-color: #d97706;
+        }
+
+        .reset-btn {
+            background-color: var(--gray);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background-color: #475569;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 1rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notes {
+            background-color: #fef3c7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .notes h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .notes ul {
+            padding-left: 1.5rem;
+        }
+
+        .notes li {
+            margin-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <div>
+                    <h1>Kenya Electrical Quoter</h1>
+                    <p class="tagline">Automated quotations for electrical engineering works</p>
+                </div>
+            </div>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +254 700 123 456</p>
+                <p><i class="fas fa-envelope"></i> quotes@electricalke.co.ke</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <section class="input-section">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> Project Details</h2>
+                
+                <div class="project-type-selector">
+                    <label>Select Project Type:</label>
+                    <div class="project-options">
+                        <div class="project-option selected" data-type="3-bedroom">
+                            <i class="fas fa-home"></i>
+                            <h4>3-Bedroom House</h4>
+                        </div>
+                        <div class="project-option" data-type="commercial">
+                            <i class="fas fa-building"></i>
+                            <h4>Commercial</h4>
+                        </div>
+                        <div class="project-option" data-type="industrial">
+                            <i class="fas fa-industry"></i>
+                            <h4>Industrial</h4>
+                        </div>
+                        <div class="project-option" data-type="custom">
+                            <i class="fas fa-edit"></i>
+                            <h4>Custom</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="project-name"><i class="fas fa-file-signature"></i> Project Name</label>
+                    <input type="text" id="project-name" placeholder="e.g., 3-Bedroom Electrical Installation" value="3-Bedroom House Electrical Installation">
+                </div>
+
+                <div class="input-group">
+                    <label for="client-name"><i class="fas fa-user"></i> Client Name</label>
+                    <input type="text" id="client-name" placeholder="Enter client name" value="John Kamau">
+                </div>
+
+                <div class="input-group">
+                    <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                    <input type="text" id="location" placeholder="Enter project location" value="Nairobi">
+                </div>
+
+                <div class="input-group">
+                    <label for="property-size"><i class="fas fa-arrows-alt"></i> Property Size (Sq. Ft)</label>
+                    <input type="number" id="property-size" placeholder="Enter property size" value="1800">
+                </div>
+
+                <div class="additional-options">
+                    <h4><i class="fas fa-list-check"></i> Additional Options</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="solar" checked>
+                        <label for="solar">Solar Power Backup System</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="surge-protection">
+                        <label for="surge-protection">Whole House Surge Protection</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="smart-home" checked>
+                        <label for="smart-home">Smart Home Integration</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="cctv">
+                        <label for="cctv">CCTV Security System</label>
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generate-btn">
+                    <i class="fas fa-calculator"></i> Generate Quotation
+                </button>
+            </section>
+
+            <section class="output-section">
+                <h2 class="section-title"><i class="fas fa-file-invoice-dollar"></i> Quotation Preview</h2>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Generating quotation...</p>
+                </div>
+                
+                <div class="quotation-preview" id="quotation-preview">
+                    <div class="quotation-header">
+                        <h3>ELECTRICAL WORKS QUOTATION</h3>
+                        <p>For: <span id="preview-project-name">3-Bedroom House Electrical Installation</span></p>
+                        <p>Date: <span id="preview-date">14 October 2023</span></p>
+                    </div>
+                    
+                    <div class="quotation-details">
+                        <p><strong>Client:</strong> <span id="preview-client">John Kamau</span></p>
+                        <p><strong>Location:</strong> <span id="preview-location">Nairobi</span></p>
+                        <p><strong>Property Size:</strong> <span id="preview-size">1800</span> Sq. Ft</p>
+                        <p><strong>Quotation ID:</strong> KE-EQ-2023-0012</p>
+                    </div>
+                    
+                    <table class="quotation-table" id="materials-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Unit Price (KES)</th>
+                                <th>Total (KES)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Materials will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="quotation-total">
+                        <p>Total Estimated Cost: <span id="total-cost">0</span> KES</p>
+                        <p style="font-size: 0.9rem; color: var(--gray);">VAT (16%) included where applicable</p>
+                    </div>
+                    
+                    <div class="notes">
+                        <h4><i class="fas fa-info-circle"></i> Notes & Terms</h4>
+                        <ul>
+                            <li>Prices are based on current Kenyan market rates (October 2023)</li>
+                            <li>Quotation valid for 30 days from the date of issue</li>
+                            <li>Prices may vary based on actual site conditions</li>
+                            <li>Installation labor included in the pricing</li>
+                            <li>All materials comply with KEBS standards</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="action-btn download-btn" id="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="action-btn print-btn" id="print-btn">
+                        <i class="fas fa-print"></i> Print Quotation
+                    </button>
+                    <button class="action-btn reset-btn" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Kenya Electrical Quoter. All rights reserved.</p>
+        <p class="disclaimer">Prices are estimates based on current Kenyan market rates. Actual costs may vary based on specific requirements, location, and market fluctuations. Always consult with a certified electrician for accurate pricing.</p>
+    </footer>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Quotation generated successfully!</span>
+    </div>
+
+    <script>
+        // Sample data for different project types
+        const projectData = {
+            "3-bedroom": {
+                name: "3-Bedroom House Electrical Installation",
+                materials: [
+                    { item: "1", description: "6mm² PVC Copper Cable (100m roll)", quantity: 5, unitPrice: 16500 },
+                    { item: "2", description: "2.5mm² PVC Copper Cable (100m roll)", quantity: 8, unitPrice: 8500 },
+                    { item: "3", description: "1.5mm² PVC Copper Cable (100m roll)", quantity: 6, unitPrice: 5500 },
+                    { item: "4", description: "13A Switch Sockets (White)", quantity: 30, unitPrice: 350 },
+                    { item: "5", description: "Light Switches (1-Gang, White)", quantity: 25, unitPrice: 250 },
+                    { item: "6", description: "Light Switches (2-Gang, White)", quantity: 15, unitPrice: 400 },
+                    { item: "7", description: "LED Downlights (12W)", quantity: 35, unitPrice: 850 },
+                    { item: "8", description: "LED Bulbs (9W, E27)", quantity: 20, unitPrice: 350 },
+                    { item: "9", description: "Consumer Unit (16 Way)", quantity: 1, unitPrice: 12500 },
+                    { item: "10", description: "Circuit Breakers (32A)", quantity: 8, unitPrice: 1800 },
+                    { item: "11", description: "Circuit Breakers (16A)", quantity: 12, unitPrice: 1500 },
+                    { item: "12", description: "PVC Conduit Pipes (20mm x 3m)", quantity: 40, unitPrice: 450 },
+                    { item: "13", description: "PVC Conduit Pipes (25mm x 3m)", quantity: 25, unitPrice: 600 },
+                    { item: "14", description: "Junction Boxes", quantity: 30, unitPrice: 200 },
+                    { item: "15", description: "Labor & Installation", quantity: 1, unitPrice: 120000 }
+                ]
+            },
+            "commercial": {
+                name: "Commercial Office Electrical Installation",
+                materials: [
+                    { item: "1", description: "10mm² PVC Copper Cable (100m roll)", quantity: 8, unitPrice: 28000 },
+                    { item: "2", description: "6mm² PVC Copper Cable (100m roll)", quantity: 10, unitPrice: 16500 },
+                    { item: "3", description: "2.5mm² PVC Copper Cable (100m roll)", quantity: 15, unitPrice: 8500 },
+                    { item: "4", description: "Commercial LED Panel Lights (600x600mm)", quantity: 40, unitPrice: 3500 },
+                    { item: "5", description: "13A Switch Sockets (White)", quantity: 60, unitPrice: 350 },
+                    { item: "6", description: "Data & Power Points Combo", quantity: 30, unitPrice: 2500 },
+                    { item: "7", description: "Distribution Board (24 Way)", quantity: 2, unitPrice: 18500 },
+                    { item: "8", description: "Circuit Breakers (63A)", quantity: 6, unitPrice: 4500 },
+                    { item: "9", description: "Emergency Exit Lights", quantity: 12, unitPrice: 3500 },
+                    { item: "10", description: "Steel Conduit Pipes (25mm x 3m)", quantity: 80, unitPrice: 1200 },
+                    { item: "11", description: "Cable Trays (100mm x 2m)", quantity: 30, unitPrice: 2800 },
+                    { item: "12", description: "Labor & Installation", quantity: 1, unitPrice: 250000 }
+                ]
+            },
+            "industrial": {
+                name: "Industrial Plant Electrical Installation",
+                materials: [
+                    { item: "1", description: "35mm² Armored Cable (100m roll)", quantity: 12, unitPrice: 85000 },
+                    { item: "2", description: "16mm² Armored Cable (100m roll)", quantity: 15, unitPrice: 45000 },
+                    { item: "3", description: "Industrial Flood Lights (150W LED)", quantity: 25, unitPrice: 12000 },
+                    { item: "4", description: "Industrial Switchgear Panel", quantity: 3, unitPrice: 120000 },
+                    { item: "5", description: "Heavy Duty Circuit Breakers (125A)", quantity: 10, unitPrice: 18500 },
+                    { item: "6", description: "Cable Ladders (300mm x 3m)", quantity: 50, unitPrice: 8500 },
+                    { item: "7", description: "Motor Starters (15HP)", quantity: 8, unitPrice: 35000 },
+                    { item: "8", description: "Earthing System Components", quantity: 1, unitPrice: 85000 },
+                    { item: "9", description: "Lightning Protection System", quantity: 1, unitPrice: 120000 },
+                    { item: "10", description: "Industrial Plugs & Sockets (63A)", quantity: 20, unitPrice: 8500 },
+                    { item: "11", description: "Labor & Installation", quantity: 1, unitPrice: 450000 }
+                ]
+            },
+            "custom": {
+                name: "Custom Electrical Project",
+                materials: [
+                    { item: "1", description: "6mm² PVC Copper Cable (100m roll)", quantity: 4, unitPrice: 16500 },
+                    { item: "2", description: "2.5mm² PVC Copper Cable (100m roll)", quantity: 6, unitPrice: 8500 },
+                    { item: "3", description: "1.5mm² PVC Copper Cable (100m roll)", quantity: 4, unitPrice: 5500 },
+                    { item: "4", description: "13A Switch Sockets (White)", quantity: 20, unitPrice: 350 },
+                    { item: "5", description: "Light Switches (1-Gang, White)", quantity: 15, unitPrice: 250 },
+                    { item: "6", description: "LED Downlights (12W)", quantity: 20, unitPrice: 850 },
+                    { item: "7", description: "Consumer Unit (12 Way)", quantity: 1, unitPrice: 9500 },
+                    { item: "8", description: "Circuit Breakers (32A)", quantity: 6, unitPrice: 1800 },
+                    { item: "9", description: "PVC Conduit Pipes (20mm x 3m)", quantity: 25, unitPrice: 450 },
+                    { item: "10", description: "Labor & Installation", quantity: 1, unitPrice: 80000 }
+                ]
+            }
+        };
+
+        // Additional options pricing
+        const additionalOptions = {
+            solar: { description: "Solar Power Backup System (3kW)", price: 350000 },
+            surge: { description: "Whole House Surge Protection", price: 25000 },
+            smart: { description: "Smart Home Integration System", price: 120000 },
+            cctv: { description: "CCTV Security System (8 cameras)", price: 180000 }
+        };
+
+        // DOM elements
+        const projectOptions = document.querySelectorAll('.project-option');
+        const projectNameInput = document.getElementById('project-name');
+        const clientNameInput = document.getElementById('client-name');
+        const locationInput = document.getElementById('location');
+        const propertySizeInput = document.getElementById('property-size');
+        const generateBtn = document.getElementById('generate-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const printBtn = document.getElementById('print-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const quotationPreview = document.getElementById('quotation-preview');
+        const loadingElement = document.getElementById('loading');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        
+        // Checkbox elements for additional options
+        const solarCheckbox = document.getElementById('solar');
+        const surgeCheckbox = document.getElementById('surge-protection');
+        const smartCheckbox = document.getElementById('smart-home');
+        const cctvCheckbox = document.getElementById('cctv');
+
+        // Current project type
+        let currentProjectType = '3-bedroom';
+
+        // Initialize the page
+        function init() {
+            // Set current date
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('preview-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Set project type selection
+            projectOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    projectOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    option.classList.add('selected');
+                    // Update current project type
+                    currentProjectType = option.dataset.type;
+                    
+                    // Update project name based on selection
+                    projectNameInput.value = projectData[currentProjectType].name;
+                    
+                    // Generate quotation for new project type
+                    generateQuotation();
+                });
+            });
+
+            // Generate quotation button
+            generateBtn.addEventListener('click', generateQuotation);
+            
+            // Download PDF button
+            downloadBtn.addEventListener('click', downloadPDF);
+            
+            // Print button
+            printBtn.addEventListener('click', () => window.print());
+            
+            // Reset button
+            resetBtn.addEventListener('click', resetForm);
+            
+            // Input change listeners
+            projectNameInput.addEventListener('input', updatePreview);
+            clientNameInput.addEventListener('input', updatePreview);
+            locationInput.addEventListener('input', updatePreview);
+            propertySizeInput.addEventListener('input', updatePreview);
+            
+            // Generate initial quotation
+            generateQuotation();
+        }
+
+        // Generate quotation based on inputs
+        function generateQuotation() {
+            // Show loading
+            loadingElement.style.display = 'block';
+            quotationPreview.style.display = 'none';
+            
+            // Simulate processing time
+            setTimeout(() => {
+                // Get base materials for selected project type
+                let materials = [...projectData[currentProjectType].materials];
+                
+                // Add additional options if selected
+                if (solarCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.solar.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.solar.price
+                    });
+                }
+                
+                if (surgeCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.surge.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.surge.price
+                    });
+                }
+                
+                if (smartCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.smart.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.smart.price
+                    });
+                }
+                
+                if (cctvCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.cctv.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.cctv.price
+                    });
+                }
+                
+                // Update preview with materials
+                updateMaterialsTable(materials);
+                
+                // Update other preview details
+                updatePreview();
+                
+                // Hide loading and show preview
+                loadingElement.style.display = 'none';
+                quotationPreview.style.display = 'block';
+                
+                // Show notification
+                showNotification('Quotation generated successfully!');
+            }, 800);
+        }
+
+        // Update materials table in preview
+        function updateMaterialsTable(materials) {
+            const tableBody = document.querySelector('#materials-table tbody');
+            tableBody.innerHTML = '';
+            
+            let totalCost = 0;
+            
+            materials.forEach(material => {
+                const total = material.quantity * material.unitPrice;
+                totalCost += total;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${material.item}</td>
+                    <td>${material.description}</td>
+                    <td>${material.quantity}</td>
+                    <td>${formatCurrency(material.unitPrice)}</td>
+                    <td>${formatCurrency(total)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Update total cost
+            document.getElementById('total-cost').textContent = formatCurrency(totalCost);
+        }
+
+        // Update preview with form values
+        function updatePreview() {
+            document.getElementById('preview-project-name').textContent = 
+                projectNameInput.value || projectData[currentProjectType].name;
+            
+            document.getElementById('preview-client').textContent = 
+                clientNameInput.value || 'Not specified';
+            
+            document.getElementById('preview-location').textContent = 
+                locationInput.value || 'Not specified';
+            
+            document.getElementById('preview-size').textContent = 
+                propertySizeInput.value || 'Not specified';
+        }
+
+        // Format currency for Kenyan Shillings
+        function formatCurrency(amount) {
+            return amount.toLocaleString('en-KE', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Download PDF function
+        function downloadPDF() {
+            // Show loading
+            loadingElement.style.display = 'block';
+            quotationPreview.style.display = 'none';
+            
+            setTimeout(() => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Title
+                doc.setFontSize(20);
+                doc.setTextColor(26, 86, 219);
+                doc.text('ELECTRICAL WORKS QUOTATION', 105, 20, { align: 'center' });
+                
+                // Project details
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`For: ${projectNameInput.value || projectData[currentProjectType].name}`, 20, 35);
+                doc.text(`Date: ${document.getElementById('preview-date').textContent}`, 20, 42);
+                doc.text(`Client: ${clientNameInput.value || 'Not specified'}`, 20, 49);
+                doc.text(`Location: ${locationInput.value || 'Not specified'}`, 20, 56);
+                doc.text(`Property Size: ${propertySizeInput.value || 'Not specified'} Sq. Ft`, 20, 63);
+                doc.text(`Quotation ID: KE-EQ-2023-0012`, 140, 42);
+                
+                // Materials table
+                const tableColumn = ["Item", "Description", "Qty", "Unit Price", "Total"];
+                const tableRows = [];
+                
+                const materials = [...projectData[currentProjectType].materials];
+                
+                // Add additional options if selected
+                if (solarCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.solar.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.solar.price
+                    });
+                }
+                
+                if (surgeCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.surge.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.surge.price
+                    });
+                }
+                
+                if (smartCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.smart.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.smart.price
+                    });
+                }
+                
+                if (cctvCheckbox.checked) {
+                    materials.push({
+                        item: (materials.length + 1).toString(),
+                        description: additionalOptions.cctv.description,
+                        quantity: 1,
+                        unitPrice: additionalOptions.cctv.price
+                    });
+                }
+                
+                let totalCost = 0;
+                
+                materials.forEach(material => {
+                    const total = material.quantity * material.unitPrice;
+                    totalCost += total;
+                    
+                    const materialData = [
+                        material.item,
+                        material.description,
+                        material.quantity.toString(),
+                        `KES ${formatCurrency(material.unitPrice)}`,
+                        `KES ${formatCurrency(total)}`
+                    ];
+                    tableRows.push(materialData);
+                });
+                
+                // Add total row
+                tableRows.push(["", "", "", "TOTAL:", `KES ${formatCurrency(totalCost)}`]);
+                
+                doc.autoTable({
+                    startY: 70,
+                    head: [tableColumn],
+                    body: tableRows,
+                    theme: 'grid',
+                    headStyles: { fillColor: [26, 86, 219] },
+                    styles: { fontSize: 9 },
+                    columnStyles: {
+                        0: { cellWidth: 15 },
+                        1: { cellWidth: 80 },
+                        2: { cellWidth: 15 },
+                        3: { cellWidth: 35 },
+                        4: { cellWidth: 35 }
+                    }
+                });
+                
+                // Notes
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setFontSize(11);
+                doc.setTextColor(245, 158, 11);
+                doc.text('Notes & Terms:', 20, finalY);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                const notes = [
+                    '• Prices are based on current Kenyan market rates (October 2023)',
+                    '• Quotation valid for 30 days from the date of issue',
+                    '• Prices may vary based on actual site conditions',
+                    '• Installation labor included in the pricing',
+                    '• All materials comply with KEBS standards'
+                ];
+                
+                notes.forEach((note, index) => {
+                    doc.text(note, 25, finalY + 7 + (index * 5));
+                });
+                
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(100, 116, 139);
+                doc.text('© 2023 Kenya Electrical Quoter. All rights reserved.', 105, 280, { align: 'center' });
+                doc.text('Prices are estimates based on current Kenyan market rates. Actual costs may vary.', 105, 285, { align: 'center' });
+                
+                // Save the PDF
+                doc.save(`Electrical_Quotation_${currentProjectType}_${Date.now()}.pdf`);
+                
+                // Hide loading and show preview
+                loadingElement.style.display = 'none';
+                quotationPreview.style.display = 'block';
+                
+                // Show notification
+                showNotification('PDF downloaded successfully!');
+            }, 1000);
+        }
+
+        // Reset form function
+        function resetForm() {
+            // Reset to default 3-bedroom option
+            projectOptions.forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.type === '3-bedroom') {
+                    opt.classList.add('selected');
+                    currentProjectType = '3-bedroom';
+                }
+            });
+            
+            // Reset form values
+            projectNameInput.value = projectData['3-bedroom'].name;
+            clientNameInput.value = 'John Kamau';
+            locationInput.value = 'Nairobi';
+            propertySizeInput.value = '1800';
+            
+            // Reset checkboxes
+            solarCheckbox.checked = true;
+            surgeCheckbox.checked = false;
+            smartCheckbox.checked = true;
+            cctvCheckbox.checked = false;
+            
+            // Regenerate quotation
+            generateQuotation();
+            
+            // Show notification
+            showNotification('Form reset to default values');
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+                  </html>
